@@ -1,0 +1,40 @@
+{
+  "features": [
+    "metric1_log",
+    "metric2_log",
+    "metric3_log",
+    "metric4_log",
+    "metric5_log",
+    "metric6_log",
+    "metric7_log",
+    "metric9_log",
+    "metric1_mean7",
+    "metric2_mean7",
+    "metric3_mean7",
+    "metric4_mean7",
+    "metric5_mean7",
+    "metric6_mean7",
+    "metric7_mean7",
+    "metric9_mean7",
+    "metric1_std7",
+    "metric2_std7",
+    "metric3_std7",
+    "metric4_std7",
+    "metric5_std7",
+    "metric6_std7",
+    "metric7_std7",
+    "metric9_std7"
+  ],
+  "alpha": 0.5,
+  "thr": {
+    "Autoencoder": 0.30309722926402094,
+    "Isolation Forest": 0.7258342538000746,
+    "Hybrid AE+IF": 0.49196956736201086,
+    "Random Forest": 0.05662612096267463,
+    "XGBoost": 0.09083358198404312
+  },
+  "ae_lo": 0.0003405848662710587,
+  "ae_hi": 10.886831321092545,
+  "if_lo": 0.3161179500597164,
+  "if_hi": 0.6802539571371727
+}
