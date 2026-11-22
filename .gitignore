@@ -1,0 +1,5 @@
+predictive_maintenance.csv
+__pycache__/
+*.pyc
+*.log
+.ipynb_checkpoints/
