@@ -1,16 +1,14 @@
 """
 uji_false_alarm.py - Hitung false alarm pada perangkat yang tidak pernah gagal.
 
-Perangkat dipilih otomatis: tanpa failure dan punya minimal --hari baris.
-Skor dihitung dengan logika yang sama seperti app.py, lalu dihitung berapa hari
-yang ditandai GAGAL oleh setiap model.
+Aturan sama seperti app.py: ROLL-1 baris pertama tiap perangkat tidak dinilai.
+Perangkat dipilih otomatis: tanpa failure dan punya cukup baris.
 
 Jalankan (setelah models/ tersedia):
-    python uji_false_alarm.py --data predictive_maintenance.csv --hari 30
-    python uji_false_alarm.py --data predictive_maintenance.csv --banyak 20
+    python uji_false_alarm.py --data predictive_maintenance.csv --hari 30 --banyak 1200
     python uji_false_alarm.py --data predictive_maintenance.csv --device S1F0XXXX
 
-Hasil: ringkasan di konsol dan pengujian/false_alarm_<device>.csv
+Hasil: ringkasan di konsol dan pengujian/false_alarm_semua.csv
 """
 import argparse
 import json
@@ -21,7 +19,7 @@ import numpy as np
 import pandas as pd
 from tensorflow import keras
 
-from pm_features import build_features, prepare
+from pm_features import ROLL, build_features, prepare
 
 MODEL_DIR = Path("models")
 OUT_DIR = Path("pengujian")
@@ -64,13 +62,13 @@ def score_all(df, art):
 
 
 def pick_devices(df, hari, banyak, device=None):
-    """Perangkat normal (tanpa failure) dengan minimal `hari` baris, urut dari riwayat terpanjang."""
+    """Perangkat normal dengan cukup baris untuk `hari` hari yang dinilai, urut dari riwayat terpanjang."""
     if device:
         return [device]
     g = df.groupby("device").agg(n=("date", "size"), fail=("failure", "sum"))
-    ok = g[(g["fail"] == 0) & (g["n"] >= hari)].sort_values("n", ascending=False)
+    ok = g[(g["fail"] == 0) & (g["n"] >= hari + ROLL - 1)].sort_values("n", ascending=False)
     if ok.empty:
-        raise SystemExit(f"Tidak ada perangkat normal dengan minimal {hari} hari.")
+        raise SystemExit(f"Tidak ada perangkat normal dengan minimal {hari + ROLL - 1} baris.")
     return list(ok.index[:banyak])
 
 
@@ -86,7 +84,8 @@ def main(args):
     for dev in devices:
         full = df[df["device"] == dev].reset_index(drop=True)
         scores = score_all(full, art)
-        w = slice(0, args.hari)
+        # Sama seperti aplikasi: ROLL-1 baris pertama tidak dinilai
+        w = slice(ROLL - 1, ROLL - 1 + args.hari)
         for name in MODELS:
             alarm = scores[name][w] >= thr[name]
             totals[name]["alarm"] += int(alarm.sum())
