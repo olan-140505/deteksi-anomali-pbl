@@ -279,19 +279,24 @@ def main(args):
     print("\n=== SENSITIVITAS ALPHA HYBRID (OOF) ===")
     print(sens_df.round(4).to_string(index=False))
 
-    # --- Model final: run_fold(df) membagi df lagi secara internal (~75% latih, ~25% validasi
-    #     untuk threshold). Lihat catatan keterbatasan di README.
-    print("\n=== MELATIH MODEL FINAL ===")
-    res = run_fold(df)
-    m = res["m"]
+    # --- Model final: dilatih pada 100% data.
+    #     Threshold diambil dari kuantil 99% skor out-of-fold (CV), karena model final
+    #     tidak punya data validasi terpisah. Ini pendekatan anggaran 1%, sama seperti CV.
+    print("\n=== MELATIH MODEL FINAL (100% data) ===")
+    scaler = StandardScaler().fit(df[FEAT].values)
+    m = fit_all(scaler.transform(df[FEAT].values), y_all)
+    thr = {n: budget_threshold(oof[n]) for n in MODEL_NAMES}
+    flagged = {n: float((oof[n] >= thr[n]).mean()) for n in MODEL_NAMES}
+    print("Proporsi baris ditandai pada OOF (harus ~1%):", {n: round(v, 4) for n, v in flagged.items()})
+
     m["ae"].save(MODEL_DIR / "autoencoder.keras")
     joblib.dump(m["iforest"], MODEL_DIR / "isolation_forest.joblib")
     joblib.dump(m["rf"], MODEL_DIR / "random_forest.joblib")
     joblib.dump(m["xgb"], MODEL_DIR / "xgboost.joblib")
-    joblib.dump(res["scaler"], MODEL_DIR / "scaler.joblib")
-    cfg = {"features": FEAT, "alpha": res["alpha"], "thr": res["thr"], **m["norm"]}
+    joblib.dump(scaler, MODEL_DIR / "scaler.joblib")
+    cfg = {"features": FEAT, "alpha": ALPHA_FIXED, "thr": thr, **m["norm"]}
     (MODEL_DIR / "config.json").write_text(json.dumps(cfg, indent=2))
-    print(f"Alpha: {res['alpha']} | Threshold: {res['thr']}")
+    print(f"Alpha: {ALPHA_FIXED} | Threshold: {thr}")
     print(f"Artefak tersimpan di folder '{MODEL_DIR}/'")
 
 
