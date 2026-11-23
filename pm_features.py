@@ -1,6 +1,9 @@
 """
-features.py - Dipakai bersama oleh train_v2.py dan app_v2.py
-agar fitur saat training dan saat aplikasi selalu sama.
+pm_features.py - Fitur bersama untuk training dan aplikasi.
+
+Dipakai oleh train_v2_fixed.py dan app.py agar fitur saat training dan saat
+inferensi selalu sama. Semua fitur bersifat kausal: hanya memakai data hari
+ini dan hari sebelumnya pada perangkat yang sama.
 """
 import numpy as np
 import pandas as pd

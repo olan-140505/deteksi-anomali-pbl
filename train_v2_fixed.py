@@ -279,7 +279,8 @@ def main(args):
     print("\n=== SENSITIVITAS ALPHA HYBRID (OOF) ===")
     print(sens_df.round(4).to_string(index=False))
 
-    # --- Model final: dilatih pada semua data training
+    # --- Model final: run_fold(df) membagi df lagi secara internal (~75% latih, ~25% validasi
+    #     untuk threshold). Lihat catatan keterbatasan di README.
     print("\n=== MELATIH MODEL FINAL ===")
     res = run_fold(df)
     m = res["m"]
