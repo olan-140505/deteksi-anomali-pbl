@@ -130,6 +130,6 @@ Random Forest memiliki rata-rata PR-AUC per fold tertinggi (0,073), tetapi varia
 
 - Failure hanya 106 kejadian, sehingga satu kejadian sudah mengubah Recall@1% sekitar 1%.
 - Perbedaan antar model tidak signifikan secara statistik. CI bootstrap antar model saling tumpang tindih.
-- Data bersumber dari Kaggle dan makna `metric1–9` tidak diketahui. Hasil ini adalah benchmark pada data tersebut, belum terbukti pada sensor DHT22 yang dipakai di ESP32.
-- Threshold model final diambil dari skor out-of-fold, dan skala skor antar fold sedikit berbeda, sehingga ada pendekatan yang perlu diakui di laporan.
+- Data bersumber dari Kaggle dan makna `metric1–9` tidak diketahui, sehingga hasil ini adalah benchmark pada data tersebut.
+- Threshold model final diambil dari skor out-of-fold, sedangkan skala skor antar fold sedikit berbeda. Pendekatan ini perlu dijelaskan di laporan.
 - TensorFlow di CPU tidak sepenuhnya deterministik, sehingga Autoencoder dan Hybrid bisa sedikit berbeda antar run. Random Forest dan XGBoost deterministik.
