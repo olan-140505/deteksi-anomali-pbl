@@ -1,21 +1,23 @@
 # Aplikasi Streamlit: deteksi kegagalan perangkat dari telemetri per jam (dataset Azure).
 # Input: CSV dengan kolom datetime, machineID, volt, rotate, pressure, vibration.
 import json
+import os
 import joblib
 import numpy as np
 import pandas as pd
 import streamlit as st
 from fitur_azure import harian, FEAT
 
+BASE = os.path.dirname(os.path.abspath(__file__))
 st.set_page_config(page_title='Deteksi Kegagalan Perangkat', layout='wide')
 st.title('Deteksi Anomali Kegagalan Perangkat Berbasis Data Sensor Harian')
 st.caption('Model: XGBoost. Threshold ditentukan dari anggaran alarm 1%.')
 
 @st.cache_resource
 def load_artifacts():
-    model = joblib.load('models/xgb_azure.joblib')
-    scaler = joblib.load('models/scaler_azure.joblib')
-    cfg = json.load(open('models/config_azure.json'))
+    model = joblib.load(os.path.join(BASE, 'models', 'xgb_azure.joblib'))
+    scaler = joblib.load(os.path.join(BASE, 'models', 'scaler_azure.joblib'))
+    cfg = json.load(open(os.path.join(BASE, 'models', 'config_azure.json')))
     return model, scaler, cfg
 
 model, scaler, cfg = load_artifacts()
