@@ -1,0 +1,33 @@
+{
+  "model": "XGBoost",
+  "fitur": [
+    "volt_mean",
+    "volt_std",
+    "rotate_mean",
+    "rotate_std",
+    "pressure_mean",
+    "pressure_std",
+    "vibration_mean",
+    "vibration_std",
+    "volt_mean_rmean7",
+    "volt_std_rmean7",
+    "rotate_mean_rmean7",
+    "rotate_std_rmean7",
+    "pressure_mean_rmean7",
+    "pressure_std_rmean7",
+    "vibration_mean_rmean7",
+    "vibration_std_rmean7",
+    "volt_mean_rstd7",
+    "volt_std_rstd7",
+    "rotate_mean_rstd7",
+    "rotate_std_rstd7",
+    "pressure_mean_rstd7",
+    "pressure_std_rstd7",
+    "vibration_mean_rstd7",
+    "vibration_std_rstd7"
+  ],
+  "threshold": 0.8788845127820974,
+  "anggaran_alarm": 0.01,
+  "jumlah_baris_latih": 36000,
+  "jumlah_failure": 690
+}
